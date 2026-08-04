@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: user_service
+  datasource:
+    # 1. The Connection String
+    # ?stringtype=unspecified allows Postgres to implicitly cast Java Strings into Postgres UUID or JSONB columns
+    url: jdbc:postgresql://db-host:5432/fitness_user_db?stringtype=unspecified&tcpKeepAlive=true
+    username: sakkol
+    password: sakkol123
+    driver-class-name: org.postgresql.Driver
+
+    # 2. HikariCP Tuning (The standard for high-throughput APIs)
+    hikari:
+      maximum-pool-size: 20      # Default is 10. (Cores * 2) + Effective Spindle Count is a good formula.
+      minimum-idle: 5            # Keep 5 connections open at all times to handle sudden traffic spikes
+      connection-timeout: 20000  # Max time (ms) to wait for a connection before throwing an exception
+      idle-timeout: 300000       # How long a connection can sit idle before being closed
+      max-lifetime: 1200000      # Close connections after 20 mins to prevent memory leaks in the DB network layer
