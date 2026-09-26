@@ -4,7 +4,7 @@ spring:
   datasource:
     # 1. The Connection String
     # ?stringtype=unspecified allows Postgres to implicitly cast Java Strings into Postgres UUID or JSONB columns
-    url: jdbc:postgresql://db-host:5432/fitness_user_db?stringtype=unspecified&tcpKeepAlive=true
+    url: jdbc:postgresql://localhost:5432/fitness_user_db?stringtype=unspecified&tcpKeepAlive=true
     username: sakkol
     password: sakkol123
     driver-class-name: org.postgresql.Driver
@@ -16,3 +16,9 @@ spring:
       connection-timeout: 20000  # Max time (ms) to wait for a connection before throwing an exception
       idle-timeout: 300000       # How long a connection can sit idle before being closed
       max-lifetime: 1200000      # Close connections after 20 mins to prevent memory leaks in the DB network layer
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8081

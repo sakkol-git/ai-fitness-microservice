@@ -8,6 +8,7 @@
 		<version>4.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.ai.fitness</groupId>
 	<artifactId>ai_service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -26,44 +27,81 @@
 		<tag/>
 		<url/>
 	</scm>
+
 	<properties>
 		<java.version>17</java.version>
+		<!-- Managed versions for MapStruct and its Lombok binding processor -->
+		<mapstruct.version>1.5.5.Final</mapstruct.version>
+		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 	</properties>
+
 	<dependencies>
+		<!-- Provides validation annotations (e.g., @NotNull, @Email) and Hibernate Validator -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
+		<!-- Core dependency for building web applications, including RESTful applications using Spring MVC. Uses Tomcat as the default embedded container -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
+		<!-- JDBC Driver required for Spring Boot to communicate with the PostgreSQL database -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- Reduces boilerplate Java code by auto-generating Getters, Setters, Constructors, and Builders at compile time -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- Java bean mapper that automatically generates type-safe mapping code between DTOs and Entities -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+
+		<!-- Provides Spring Data JPA and Hibernate for Object-Relational Mapping (ORM) and database interactions -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<!-- Core engine for database migrations, allowing you to version control your database schema -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<!-- PostgreSQL-specific database extension required by newer versions of Flyway -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+		</dependency>
+
+		<!-- Provides testing libraries for JPA/Database layers, configuring an in-memory database or testcontainers by default -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Provides testing capabilities for validation logic in isolated test environments -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Provides MockMvc for testing web controllers and routing without starting a full HTTP server -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
@@ -78,6 +116,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<excludes>
+						<!-- Prevents Lombok from being packaged into the final executable JAR, as it's only needed at compile time -->
 						<exclude>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
@@ -85,9 +124,11 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<!-- Configures the Java compiler to run necessary annotation processors in the correct order -->
 				<executions>
 					<execution>
 						<id>default-compile</id>
@@ -97,9 +138,22 @@
 						</goals>
 						<configuration>
 							<annotationProcessorPaths>
+								<!-- Tells Maven to generate MapStruct mapping implementations during compilation -->
+								<path>
+									<groupId>org.mapstruct</groupId>
+									<artifactId>mapstruct-processor</artifactId>
+									<version>${mapstruct.version}</version>
+								</path>
+								<!-- Tells Maven to process Lombok annotations during compilation -->
 								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok</artifactId>
+								</path>
+								<!-- The crucial binding library that allows MapStruct to use Lombok's generated Getters/Setters/Builders when generating mappers -->
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok-mapstruct-binding</artifactId>
+									<version>${lombok-mapstruct-binding.version}</version>
 								</path>
 							</annotationProcessorPaths>
 						</configuration>
@@ -113,14 +167,36 @@
 						<configuration>
 							<annotationProcessorPaths>
 								<path>
+									<groupId>org.mapstruct</groupId>
+									<artifactId>mapstruct-processor</artifactId>
+									<version>${mapstruct.version}</version>
+								</path>
+								<path>
 									<groupId>org.projectlombok</groupId>
 									<artifactId>lombok</artifactId>
+								</path>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok-mapstruct-binding</artifactId>
+									<version>${lombok-mapstruct-binding.version}</version>
 								</path>
 							</annotationProcessorPaths>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+
+			<!-- Executes database migrations via Maven commands using the provided connection details -->
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<configuration>
+					<url>jdbc:postgresql://localhost:5432/fitness_ai_db</url>
+					<user>sakkol</user>
+					<password>sakkol123</password>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
