@@ -87,6 +87,12 @@
 			<artifactId>flyway-database-postgresql</artifactId>
 		</dependency>
 
+		<!-- service discovery client with eureka -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
 		<!-- Provides testing libraries for JPA/Database layers, configuring an in-memory database or testcontainers by default -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

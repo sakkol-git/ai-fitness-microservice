@@ -4,7 +4,9 @@ import com.ai.fitness.activity_service.dto.ActivityRequest;
 import com.ai.fitness.activity_service.dto.ActivityResponse;
 import com.ai.fitness.activity_service.entity.Activity;
 import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
+@Component
 @Mapper(componentModel = "spring")
 public interface ActivityMapper {
     Activity toActivity(ActivityRequest request);

@@ -13,15 +13,21 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ActivityService {
+
     private final ActivityMapper activityMapper;
     private final ActivityRepository activityRepository;
-    public List<ActivityResponse> getActivities(){
-        var activities = activityRepository.findAll();
-        return activities.stream().map(activityMapper::toActivityResponse).toList();
+    public ActivityResponse getActivityById(String activityId) {
+        var activity = activityRepository.findById(activityId).orElseThrow();
+        return activityMapper.toActivityResponse(activity);
     };
 
     public ActivityResponse trackActivity(ActivityRequest request) {
         Activity activity = activityRepository.save(activityMapper.toActivity(request));
         return activityMapper.toActivityResponse(activity);
+    }
+
+    public List<ActivityResponse> getUserActivities(String userId) {
+        var userActivities = activityRepository.findByUserId(userId);
+        return userActivities.stream().map(activityMapper::toActivityResponse).toList();
     }
 }
